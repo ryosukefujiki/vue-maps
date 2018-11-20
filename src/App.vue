@@ -220,8 +220,8 @@
       },
       addBlock () {
         // console.log(this.selectedType)
-        this.$refs.container.addNewBlock(this.selectedType)
-        // this.$refs.container.addNewBlock(this.addCard)
+        // this.$refs.container.addNewBlock(this.selectedType)
+        this.$refs.container.addNewBlock('Card', this.addCard)
       },
       saveProperty (val) {
         console.log(val)
@@ -264,12 +264,12 @@
         this.contextMenu.left = left
       },
       addBlockContextMenu (name) {
-        
+        console.log(this.addCard)
         let offset = domHelper.getOffsetRect(this.$refs.container.$el)
         let x = this.contextMenu.mouseX - offset.left
         let y = this.contextMenu.mouseY - offset.top
 
-        this.$refs.container.addNewBlock(name, x, y)
+        this.$refs.container.addNewBlock(name, this.addCard,x, y)
         this.closeContextMenu()
       },
       closeContextMenu () {
