@@ -9,7 +9,18 @@
       @blockSelect="selectBlock"
       @blockDeselect="deselectBlock"
       class="container"/>
-    <VueBlockProperty :property="selectedBlockProperty" @save="saveProperty"/>
+    <label>
+      <select name="type"  v-model="selectedId">
+            <option v-for="block in scene.blocks" :value="block.id" v-model="blockId">
+              {{block.id}}
+            </option>
+      </select>
+    </label>
+    <input v-model="changetitle" placeholder="change-title">
+    <button @click.stop="changeTitle">Change</button>
+
+    |
+
     <label>
       <select name="type" v-model="selectedType">
         <template v-for="type in selectBlocksType">
@@ -19,12 +30,16 @@
         </template>
       </select>
     </label>
-    <button @click.stop="changeTitle">Change</button>
+
+    <input v-model="addCard" placeholder="title">
     <button @click.stop="addBlock">Add</button>
     |
     <label for="useContextMenu">
       <input type="checkbox" v-model="useContextMenu" id="useContextMenu">Use right click for Add blocks
     </label>
+
+    <button @click.stop="scaleEnlarge">Enlarge</button>
+    <button @click.stop="scaleShrink">Shrink</button>
 
     <ul id="contextMenu" ref="contextMenu" tabindex="-1" v-show="contextMenu.isShow"
         @blur="closeContextMenu"
@@ -54,78 +69,13 @@
     },
     data: function () {
       return {
+        blockId: this.blockId,
+        message: this.message,
+        changetitle: this.changetitle,
+        addCard: this.addCard,
         blocks: [
           {
-            name: 'text',
-            title: 'Text',
-            family: 'Animations',
-            description: 'Show text',
-            fields: [
-              {
-                name: 'text',
-                label: 'Text',
-                type: 'string',
-                attr: 'property'
-              },
-              {
-                name: 'delay',
-                label: 'Delay (s)',
-                type: 'number',
-                attr: 'property'
-              },
-              {
-                name: 'Show',
-                type: 'event',
-                attr: 'input'
-              },
-              {
-                name: 'Hide',
-                type: 'event',
-                attr: 'input'
-              },
-              {
-                name: 'onShow',
-                type: 'event',
-                attr: 'output'
-              },
-              {
-                name: 'onHide',
-                type: 'event',
-                attr: 'output'
-              }
-            ]
-          },
-          {
-            name: 'animation',
-            title: 'Animation',
-            family: 'Animations',
-            description: 'Show animation',
-            fields: [
-              {
-                name: 'animation',
-                label: 'Animation',
-                type: 'animation',
-                attr: 'property'
-              },
-              {
-                name: 'Play',
-                type: 'event',
-                attr: 'input'
-              },
-              {
-                name: 'Stop',
-                type: 'event',
-                attr: 'input'
-              },
-              {
-                name: 'onEnd',
-                type: 'event',
-                attr: 'output'
-              }
-            ]
-          },
-          {
-            name: 'Chat message',
+            name: 'Card',
             family: 'Events',
             description: '',
             fields: [
@@ -136,85 +86,13 @@
                 attr: 'property'
               },
               {
-                name: 'onMessage',
-                type: 'event',
-                attr: 'output'
-              }
-            ]
-          },
-          {
-            name: 'delay',
-            title: 'Delay',
-            family: 'Time',
-            description: '',
-            fields: [
-              {
-                name: 'delay',
-                label: 'Delay (s)',
-                type: 'number',
-                attr: 'property',
-                value: 1.0
-              },
-              {
                 name: 'input',
-                type: 'event',
+                type: '',
                 attr: 'input'
               },
               {
                 name: 'output',
-                type: 'event',
-                attr: 'output'
-              }
-            ]
-          },
-          {
-            name: 'shortcuts',
-            title: 'Shortcuts',
-            family: 'Events',
-            description: 'Press shortcut for call event',
-            fields: [
-              {
-                name: 'keys',
-                label: 'Activation keys',
-                type: 'keys',
-                attr: 'property'
-              },
-              {
-                name: 'onPress',
-                type: 'event',
-                attr: 'output'
-              }
-            ]
-          },
-          {
-            name: 'splitter',
-            title: 'Splitter',
-            family: 'Helpers',
-            description: 'Press shortcut for call event',
-            fields: [
-              {
-                name: 'input',
-                type: 'event',
-                attr: 'input'
-              },
-              {
-                name: 'output',
-                type: 'event',
-                attr: 'output'
-              },
-              {
-                name: 'output',
-                type: 'event',
-                attr: 'output'
-              },
-              {
-                name: 'output',
-                type: 'event',
-                attr: 'output'
-              },
-              {
-                name: 'output',
-                type: 'event',
+                type: '',
                 attr: 'output'
               }
             ]
@@ -223,11 +101,26 @@
         scene: {
           blocks: [
             {
-              id: 2,
+              id: 1,
               x: -700,
               y: -69,
-              name: 'Chat message',
-              title: 'Chat message',
+              name: 'Card',
+              title: 'Title',
+              values: {
+                property: [
+                  {
+                    name: 'message',
+                    type: 'string'
+                  }
+                ]
+              }
+            },
+            {
+              id: 2,
+              x: -600,
+              y: 40,
+              name: 'Card',
+              title: 'Title',
               values: {
                 property: [
                   {
@@ -239,25 +132,10 @@
             },
             {
               id: 3,
-              x: -600,
-              y: 40,
-              name: 'Chat message',
-              title: 'Chat message',
-              values: {
-                property: [
-                  {
-                    name: 'message',
-                    type: 'string'
-                  }
-                ]
-              }
-            },
-            {
-              id: 4,
               x: -157,
               y: -68.5,
-              name: 'text',
-              title: 'Text',
+              name: 'Card',
+              title: 'Title',
               values: {
                 property: {
                   text: {
@@ -271,24 +149,24 @@
           links: [
             {
               id: 1,
-              originID: 2,
+              originID: 1,
               originSlot: 0,
-              targetID: 4,
+              targetID: 3,
               targetSlot: 0
             },
             {
               id: 2,
-              originID: 2,
+              originID: 1,
               originSlot: 0,
-              targetID: 4,
-              targetSlot: 1
+              targetID: 2,
+              targetSlot: 0
             },
             {
               id: 3,
-              originID: 3,
+              originID: 2,
               originSlot: 0,
-              targetID: 4,
-              targetSlot: 1
+              targetID: 2,
+              targetSlot: 0
             }
           ],
           container: {
@@ -298,6 +176,7 @@
           }
         },
         selectedBlock: null,
+        selectedId: this.selectedId,
         selectedType: 'delay',
         useContextMenu: true,
         contextMenu: {
@@ -340,8 +219,9 @@
         })
       },
       addBlock () {
-        console.log(this.selectedType)
+        // console.log(this.selectedType)
         this.$refs.container.addNewBlock(this.selectedType)
+        // this.$refs.container.addNewBlock(this.addCard)
       },
       saveProperty (val) {
         console.log(val)
@@ -384,6 +264,7 @@
         this.contextMenu.left = left
       },
       addBlockContextMenu (name) {
+        
         let offset = domHelper.getOffsetRect(this.$refs.container.$el)
         let x = this.contextMenu.mouseX - offset.left
         let y = this.contextMenu.mouseY - offset.top
@@ -397,9 +278,27 @@
       changeTitle () {
         // console.log('change')
         // console.log(this.scene.blocks[0].title)
-        this.scene.blocks[0].title = 'こんちは'
-        console.log(this.scene.links)
+        for (var i = 0; i < this.scene.blocks.length; i++) {
+          if (this.scene.blocks[i].id == this.selectedId) {
+            console.log(this.selectedId)
+            console.log('を変更します')
+            this.scene.blocks[i].title = this.changetitle
+          }
+            // console.log('hoge')
+        }
+        // this.scene.blocks[0].title = this.message
+        // console.log(this.scene.links)
         // console.log(this.scene.blocks[0].title)
+        let scene = this.scene
+        this.scene = merge({}, scene)
+      },
+      scaleEnlarge () {
+        this.scene.container.scale += 0.2
+        let scene = this.scene
+        this.scene = merge({}, scene)
+      },
+      scaleShrink () {
+        this.scene.container.scale -= 0.2
         let scene = this.scene
         this.scene = merge({}, scene)
       }
@@ -407,11 +306,11 @@
     watch: {
       blocks (newValue) {
         console.log('blocks', JSON.stringify(newValue))
-        console.log('ブロックだよ')
+        // console.log('ブロックだよ')
       },
       scene (newValue) {
         console.log('scene', JSON.stringify(newValue))
-        console.log('シーンだよ')
+        // console.log('シーンだよ')
       }
     }
   }

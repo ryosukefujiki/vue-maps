@@ -393,7 +393,7 @@
         })
       },
       // Blocks
-      addNewBlock (nodeName, x, y) {
+      addNewBlock (nodeName,nodeTitle, x, y) {
         let maxID = Math.max(0, ...this.blocks.map(function (o) {
           return o.id
         }))
@@ -418,6 +418,7 @@
 
         block.x = x
         block.y = y
+        block.title = nodeTitle
         this.blocks.push(block)
 
         this.updateScene()
